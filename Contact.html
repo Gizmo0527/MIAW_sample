@@ -5,10 +5,16 @@
         <script type="text/javascript">
             function openChatWindow() {
                 const email = document.getElementById('email').value;
-                const newWindow = window.open('MessagingSession.html', 'MIAW');
 
-                newWindow.onload = function() {
-                    newWindow.postMessage({ email: email }, '*');
+                if (email) {
+                    const newWindow = window.open('MessagingSession.html', 'MIAW');
+
+                    newWindow.onload = function() {
+                        newWindow.postMessage({ email: email }, '*');
+                    }
+                }
+                else {
+                    alert('メールアドレスを入力してください。');
                 }
             }
         </script>
@@ -20,7 +26,7 @@
 
                 <section>
                     <h2>メールアドレス<span class="requiredtxt">必須</span></h2>
-                    <input type="text" id="email"/>
+                    <input type="text" id="email" />
                     <ul>
                         <li>※有効なメールアドレスをご入力ください。</li>
                     </ul>
