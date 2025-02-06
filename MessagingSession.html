@@ -23,9 +23,13 @@
             window.addEventListener("onEmbeddedMessagingReady", e => {
                 console.log("onEmbeddedMessagingReady event triggered");
                               
-                embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
-                    "Email" : receivedEmail
-                });
+                if (receivedEmail) {
+                    embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
+                        "Email": receivedEmail
+                    });
+                } else {
+                    console.warn("Email not received yet.");
+                }
             });
 
             function initEmbeddedMessaging() {
