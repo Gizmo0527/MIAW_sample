@@ -5,7 +5,7 @@
         <script type="text/javascript">
             function openChatWindow() {
                 const email = document.getElementById('email').value;
-                const newWindow = window.open('messagingsession.html', 'MIAW');
+                const newWindow = window.open('MessagingSession.html', 'MIAW');
 
                 newWindow.onload = function() {
                     newWindow.postMessage({ email: email }, '*');
