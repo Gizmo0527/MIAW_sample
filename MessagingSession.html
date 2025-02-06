@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+        <title>チャットでオペレーターへご質問ください。</title>
+    </head>
+    <body>
+        <h1>Email:</h1>
+        <p id="emailDisplay"></p>
+        <input type='hidden' id='email' />
+
+        <script type='text/javascript'>
+            function initEmbeddedMessaging() {
+                try {
+                    embeddedservice_bootstrap.settings.language = 'ja'; // For example, enter 'en' or 'en-US'
+        
+                    embeddedservice_bootstrap.init(
+                        '00DGC000005riES',
+                        'EmbeddedServiceRelease',
+                        'https://contoso8-dev-ed.develop.my.site.com/ESWEmbeddedServiceRelease1738731964630',
+                        {
+                            scrt2URL: 'https://contoso8-dev-ed.develop.my.salesforce-scrt.com'
+                        }
+                    );
+                } catch (err) {
+                    console.error('Error loading Embedded Messaging: ', err);
+                }
+            };
+
+            window.addEventListener('message', function(event) {
+                console.log("Message event triggered");
+
+                const email = event.data.email;
+                document.getElementById('emailDisplay').textContent = email;
+                document.getElementById('hidden').value = email;
+            });
+
+            window.addEventListener("onEmbeddedMessagingReady", e => {
+                console.log("onEmbeddedMessagingReady event triggered");
+                const email = document.getElementById('email').value;
+                              
+                embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
+                    "Email" : email
+                });
+            });
+        </script>
+        <script type='text/javascript' src='https://contoso8-dev-ed.develop.my.site.com/ESWEmbeddedServiceRelease1738731964630/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+    </body>
+</html>

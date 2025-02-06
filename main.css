@@ -1,0 +1,74 @@
+#mainContainer {
+    font-family: arial;
+    margin: 25px;
+    width: 1200px;
+    color: rgb(44, 38, 80);
+}
+
+.mainContents {
+    width: 80%;
+    /* 水平方向の中央揃え */
+    margin: 0 auto;    
+}
+
+h1 {
+    font-size: 20px;
+}
+
+h2 {
+    font-size:20px;
+}
+
+.requiredtxt {
+    margin-left: 10px;
+    padding:2px 5px 0px 5px;
+    font-size:15px;
+    color: white;
+    background-color: rgb(195, 9, 9);
+    border-radius: 10px;
+}
+
+.emphasizeR {
+    font-size: 12px;
+    color: rgba(255, 0, 0, 0.895);
+}
+
+#email {
+    width: 100%;
+    height: 50px;
+    font-size: 20px;
+}
+
+li {
+    list-style: none;
+    font-size: 12px;
+}
+
+ul.bdrBox {
+    font-weight: bold;
+    border:1px solid lightgray;
+}
+
+.btn_area {
+    display:block;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20;
+    width:50%;
+    background-color: white;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.btn_area:hover {
+    background-color: whitesmoke;
+}
+
+.submit_btn {
+    font-size: 20px;
+    border:none;
+    background-color: transparent;
+    cursor: pointer;
+}

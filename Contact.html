@@ -1,26 +1,35 @@
 <html>
     <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+        <title>チャットでオペレーターへご質問ください。</title>
+        <link rel="stylesheet" type="text/css" href="main.css" />
+        <script type="text/javascript">
+            function openChatWindow() {
+                const email = document.getElementById('email').value;
+                const newWindow = window.open('messagingsession.html', 'MIAW');
+
+                newWindow.onload = function() {
+                    newWindow.postMessage({ email: email }, '*');
+                }
+            }
+        </script>
     </head>
     <body>
-        <script type='text/javascript'>
-            function initEmbeddedMessaging() {
-                try {
-                    embeddedservice_bootstrap.settings.language = 'ja'; // For example, enter 'en' or 'en-US'
-        
-                    embeddedservice_bootstrap.init(
-                        '00DGC000005riES',
-                        'EmbeddedServiceRelease',
-                        'https://contoso8-dev-ed.develop.my.site.com/ESWEmbeddedServiceRelease1738731964630',
-                        {
-                            scrt2URL: 'https://contoso8-dev-ed.develop.my.salesforce-scrt.com'
-                        }
-                    );
-                } catch (err) {
-                    console.error('Error loading Embedded Messaging: ', err);
-                }
-            };
-        </script>
-        <script type='text/javascript' src='https://contoso8-dev-ed.develop.my.site.com/ESWEmbeddedServiceRelease1738731964630/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+        <div id="mainContainer">
+            <main class="mainContents">
+                <h1>チャットでオペレーターへご質問ください。</h1>
+
+                <section>
+                    <h2>メールアドレス<span class="requiredtxt">必須</span></h2>
+                    <input type="text" id="email"/>
+                    <ul>
+                        <li>※有効なメールアドレスをご入力ください。</li>
+                    </ul>
+                </section>
+
+                <div class="btn_area">
+                    <input id="prechat_submit" class="submit_btn" type="button" onclick="openChatWindow()" value="オペレーターにチャットする" />
+                </div>    
+            </main>
+        </div>
     </body>
 </html>
