@@ -6,9 +6,28 @@
     <body>
         <h1>Email:</h1>
         <p id="emailDisplay"></p>
-        <input type='hidden' id='email' />
 
         <script type='text/javascript'>
+            let receivedEmail = '';
+
+            window.addEventListener('message', function(event) {
+                console.log("Message event triggered");
+
+                receivedEmail = event.data.email;
+                document.getElementById('emailDisplay').textContent = receivedEmail;
+                document.getElementById('hidden').value = receivedEmail;
+
+                initEmbeddedMessaging();
+            });
+
+            window.addEventListener("onEmbeddedMessagingReady", e => {
+                console.log("onEmbeddedMessagingReady event triggered");
+                              
+                embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
+                    "Email" : receivedEmail
+                });
+            });
+
             function initEmbeddedMessaging() {
                 try {
                     embeddedservice_bootstrap.settings.language = 'ja'; // For example, enter 'en' or 'en-US'
@@ -25,24 +44,7 @@
                     console.error('Error loading Embedded Messaging: ', err);
                 }
             };
-
-            window.addEventListener('message', function(event) {
-                console.log("Message event triggered");
-
-                const email = event.data.email;
-                document.getElementById('emailDisplay').textContent = email;
-                document.getElementById('hidden').value = email;
-            });
-
-            window.addEventListener("onEmbeddedMessagingReady", e => {
-                console.log("onEmbeddedMessagingReady event triggered");
-                const email = document.getElementById('email').value;
-                              
-                embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
-                    "Email" : email
-                });
-            });
         </script>
-        <script type='text/javascript' src='https://contoso8-dev-ed.develop.my.site.com/ESWEmbeddedServiceRelease1738731964630/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+        <script type='text/javascript' src='https://contoso8-dev-ed.develop.my.site.com/ESWEmbeddedServiceRelease1738731964630/assets/js/bootstrap.min.js'></script>
     </body>
 </html>
