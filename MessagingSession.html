@@ -9,25 +9,25 @@
 
         <script type='text/javascript'>
             let receivedEmail = '';
+            let embeddedMessagingInitialized = false;
 
             window.addEventListener('message', function(event) {
-                console.log("Message event triggered");
+                console.log("Message received:", event.data);
 
-                receivedEmail = event.data.email;
-                document.getElementById('emailDisplay').textContent = receivedEmail;
-
-                initEmbeddedMessaging();
-            });
-
-            window.addEventListener("onEmbeddedMessagingReady", e => {
-                console.log("onEmbeddedMessagingReady event triggered");
-                              
-                if (receivedEmail) {
-                    embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
-                        "Email": receivedEmail
-                    });
+                if (event.data && event.data.email) {
+                    receivedEmail = event.data.email;
+                    document.getElementById('emailDisplay').textContent = receivedEmail;
+        
+                    // Embedded Messagingがまだ初期化されていない場合、初期化を実行
+                    if (!embeddedMessagingInitialized) {
+                        initEmbeddedMessaging();
+                        embeddedMessagingInitialized = true;
+                    } else {
+                        // すでに初期化済みの場合は、再度メールアドレスを設定
+                        setEmailInPrechat();
+                    }
                 } else {
-                    console.warn("Email not received yet.");
+                    console.warn("No email found in message data.");
                 }
             });
 
@@ -47,6 +47,24 @@
                     console.error('Error loading Embedded Messaging: ', err);
                 }
             };
+
+            // Embedded Messagingが準備完了した際にメールアドレスを設定
+            window.addEventListener("onEmbeddedMessagingReady", function() {
+                console.log("onEmbeddedMessagingReady triggered");
+                setEmailInPrechat();
+            });
+
+            // メールアドレスをプリチャットに設定する関数
+            function setEmailInPrechat() {
+                if (receivedEmail) {
+                    console.log("Setting pre-chat email:", receivedEmail);
+                    embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
+                        "Email": receivedEmail
+                    });
+                } else {
+                    console.warn("Email not received yet. Waiting for postMessage.");
+                }
+            }
         </script>
         <script type='text/javascript' src='https://contoso8-dev-ed.develop.my.site.com/ESWEmbeddedServiceRelease1738731964630/assets/js/bootstrap.min.js'></script>
     </body>
