@@ -3,11 +3,11 @@
         <title>チャットでオペレーターへご質問ください。</title>
         <link rel="stylesheet" type="text/css" href="main.css" />
         <script type="text/javascript">
-            function openChatWindow() {
+            function openChatWindow(url) {
                 const email = document.getElementById('email').value;
 
                 if (email) {
-                    const newWindow = window.open('MessagingSession.html', 'MIAW');
+                    const newWindow = window.open(url, 'MIAW');
 
                     newWindow.onload = function() {
                         newWindow.postMessage({ email: email }, '*');
@@ -33,7 +33,10 @@
                 </section>
 
                 <div class="btn_area">
-                    <input id="prechat_submit" class="submit_btn" type="button" onclick="openChatWindow()" value="オペレーターにチャットする" />
+                    <input id="prechat_submit" class="submit_btn" type="button" onclick="openChatWindow('MessagingSession.html')" value="オペレーターにチャットする" />
+                </div>    
+                <div class="btn_area">
+                    <input id="prechat_submit" class="submit_btn" type="button" onclick="openChatWindow('MessagingSession2.html')" value="オペレーターにチャットする" />
                 </div>    
             </div>
         </div>
