@@ -21,6 +21,7 @@ const LIVE_AGENT_BASE = 'https://sf-proxy.toshirock0708.workers.dev'; // ご自�
 const DEPLOYMENT_ID = '572GB000000HT0U';
 const BUTTON_ID = '573GB000000HU5l';
 const ORGANIZATION_ID = '00DGB000003WnP8';
+const API_VERSION = '63.0';
 
 let affinityToken = '';
 let sessionKey = '';
@@ -35,7 +36,7 @@ async function startSession() {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'X-LIVEAGENT-API-VERSION': '63',
+      'X-LIVEAGENT-API-VERSION': API_VERSION,
       'X-LIVEAGENT-AFFINITY': 'null'
     }
   });
@@ -55,7 +56,7 @@ async function initChasitor() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-LIVEAGENT-API-VERSION': '63',
+      'X-LIVEAGENT-API-VERSION': API_VERSION,
       'X-LIVEAGENT-SESSION-KEY': sessionKey,
       'X-LIVEAGENT-AFFINITY': affinityToken,
       'X-LIVEAGENT-SEQUENCE': currentSequence.toString()
@@ -87,7 +88,7 @@ async function listenMessages() {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'X-LIVEAGENT-API-VERSION': '63',
+        'X-LIVEAGENT-API-VERSION': API_VERSION,
         'X-LIVEAGENT-AFFINITY': affinityToken,
         'X-LIVEAGENT-SESSION-KEY': sessionKey
       }
@@ -97,7 +98,7 @@ async function listenMessages() {
 
     // 最新の sequence を更新
     if (data.sequence) {
-      currentSequence = data.sequence + 1;
+      currentSequence = data.sequence;
     }
 
     data.messages.forEach(m => {
@@ -119,10 +120,10 @@ async function sendMessage() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-LIVEAGENT-API-VERSION': '63',
+      'X-LIVEAGENT-API-VERSION': API_VERSION,
       'X-LIVEAGENT-AFFINITY': affinityToken,
       'X-LIVEAGENT-SESSION-KEY': sessionKey,
-      'X-LIVEAGENT-SEQUENCE': currentSequence.toString()
+      'X-LIVEAGENT-SEQUENCE': 3
     },
     body: JSON.stringify({ text: msg })
   });
@@ -138,7 +139,7 @@ async function endChat() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-LIVEAGENT-API-VERSION': '63',
+      'X-LIVEAGENT-API-VERSION': API_VERSION,
       'X-LIVEAGENT-AFFINITY': affinityToken,
       'X-LIVEAGENT-SESSION-KEY': sessionKey,
       'X-LIVEAGENT-SEQUENCE': currentSequence.toString()
