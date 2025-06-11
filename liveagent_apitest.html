@@ -34,6 +34,7 @@ async function startSession() {
   const res = await fetch(`${LIVE_AGENT_BASE}/chat/rest/System/SessionId`, {
     method: 'GET',
     headers: {
+      'Content-Type': 'application/json',
       'X-LIVEAGENT-API-VERSION': '63',
       'X-LIVEAGENT-AFFINITY': 'null'
     }
@@ -85,6 +86,7 @@ async function listenMessages() {
     const res = await fetch(`${LIVE_AGENT_BASE}/chat/rest/System/Messages`, {
       method: 'GET',
       headers: {
+        'Content-Type': 'application/json',
         'X-LIVEAGENT-API-VERSION': '63',
         'X-LIVEAGENT-AFFINITY': affinityToken,
         'X-LIVEAGENT-SESSION-KEY': sessionKey
@@ -95,7 +97,7 @@ async function listenMessages() {
 
     // 最新の sequence を更新
     if (data.sequence) {
-      currentSequence = data.sequence + 100;
+      currentSequence = data.sequence + +1;
     }
 
     data.messages.forEach(m => {
@@ -135,6 +137,7 @@ async function endChat() {
   await fetch(`${LIVE_AGENT_BASE}/chat/rest/Chasitor/ChatEnd`, {
     method: 'POST',
     headers: {
+      'Content-Type': 'application/json',
       'X-LIVEAGENT-API-VERSION': '63',
       'X-LIVEAGENT-AFFINITY': affinityToken,
       'X-LIVEAGENT-SESSION-KEY': sessionKey,
