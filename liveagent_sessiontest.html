@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Salesforce Chat Session Test</title>
+</head>
+<body>
+  <button onclick="getSession()">Get Session ID</button>
+  <pre id="output"></pre>
+
+  <script>
+    async function getSession() {
+      try {
+        const res = await fetch('https://d.la1-c1-hn3.salesforceliveagent.com/chat/rest/System/SessionId', {
+          method: 'GET',
+          headers: {
+            'X-LIVEAGENT-API-VERSION': '50',
+            'X-LIVEAGENT-AFFINITY': 'null'
+          }
+        });
+
+        const data = await res.json();
+        document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById('output').textContent = 'Error: ' + err;
+      }
+    }
+  </script>
+</body>
+</html>
