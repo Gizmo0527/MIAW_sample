@@ -25,6 +25,7 @@ const ORGANIZATION_ID = '00DGB000003WnP8';
 let affinityToken = '';
 let sessionKey = '';
 let sessionId = '';
+let sequenceNumber = 1;
 
 const chatBox = document.getElementById('chatBox');
 
@@ -56,7 +57,7 @@ async function initChasitor() {
       'X-LIVEAGENT-API-VERSION': '63',
       'X-LIVEAGENT-SESSION-KEY': sessionKey,
       'X-LIVEAGENT-AFFINITY': affinityToken,
-      'X-LIVEAGENT-SEQUENCE': '1'
+      'X-LIVEAGENT-SEQUENCE': sequenceNumber.toString()
     },
     body: JSON.stringify({
       organizationId: ORGANIZATION_ID,
@@ -74,6 +75,7 @@ async function initChasitor() {
     })
   });
 
+  sequenceNumber++;
   log('チャット初期化完了');
 }
 
@@ -112,11 +114,12 @@ async function sendMessage() {
       'X-LIVEAGENT-API-VERSION': '63',
       'X-LIVEAGENT-AFFINITY': affinityToken,
       'X-LIVEAGENT-SESSION-KEY': sessionKey,
-      'X-LIVEAGENT-SEQUENCE': '2'
+      'X-LIVEAGENT-SEQUENCE': sequenceNumber.toString()
     },
     body: JSON.stringify({ text: msg })
   });
 
+  sequenceNumber++;
   log(`あなた: ${msg}`);
   document.getElementById('messageInput').value = '';
 }
@@ -129,10 +132,11 @@ async function endChat() {
       'X-LIVEAGENT-API-VERSION': '63',
       'X-LIVEAGENT-AFFINITY': affinityToken,
       'X-LIVEAGENT-SESSION-KEY': sessionKey,
-      'X-LIVEAGENT-SEQUENCE': '3'
+      'X-LIVEAGENT-SEQUENCE': sequenceNumber.toString()
     }
   });
 
+  sequenceNumber++;
   log('チャットを終了しました。');
 }
 
