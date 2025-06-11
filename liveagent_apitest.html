@@ -139,7 +139,8 @@ async function endChat() {
       'X-LIVEAGENT-AFFINITY': affinityToken,
       'X-LIVEAGENT-SESSION-KEY': sessionKey,
       'X-LIVEAGENT-SEQUENCE': currentSequence.toString()
-    }
+    },
+    body: JSON.stringify({ reason: 'client'})
   });
 
   log('チャットを終了しました。');
