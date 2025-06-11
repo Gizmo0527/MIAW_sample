@@ -10,10 +10,10 @@
   <script>
     async function getSession() {
       try {
-        const res = await fetch('https://d.la1-c1-hn3.salesforceliveagent.com/chat/rest/System/SessionId', {
+        const res = await fetch('https://sf-proxy.toshirock0708.workers.dev/chat/rest/System/SessionId', {
           method: 'GET',
           headers: {
-            'X-LIVEAGENT-API-VERSION': '50',
+            'X-LIVEAGENT-API-VERSION': '63',
             'X-LIVEAGENT-AFFINITY': 'null'
           }
         });
