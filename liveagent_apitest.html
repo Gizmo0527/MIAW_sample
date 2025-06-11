@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Salesforce Live Agent Chat</title>
+  <style>
+    #chatBox { width: 400px; height: 300px; border: 1px solid #ccc; overflow-y: auto; margin-bottom: 10px; padding: 10px; }
+  </style>
+</head>
+<body>
+
+<h2>Live Agent Chat</h2>
+<div id="chatBox"></div>
+
+<input type="text" id="messageInput" placeholder="メッセージを入力">
+<button onclick="sendMessage()">送信</button>
+<button onclick="endChat()">チャット終了</button>
+
+<script>
+const LIVE_AGENT_BASE = 'https://d.la1-c1-hn3.salesforceliveagent.com'; // 環境に合わせて変更
+const DEPLOYMENT_ID = '572GB000000HT0U';
+const BUTTON_ID = '573GB000000HU5l';
+const ORGANIZATION_ID = '00DGB000003WnP8';
+
+let affinityToken = '';
+let sessionKey = '';
+let sessionId = '';
+
+const chatBox = document.getElementById('chatBox');
+
+// セッション開始
+async function startSession() {
+  const res = await fetch(`${LIVE_AGENT_BASE}/chat/rest/System/SessionId`, {
+    method: 'GET',
+    headers: {
+      'X-LIVEAGENT-API-VERSION': '50',
+      'X-LIVEAGENT-AFFINITY': 'null'
+    }
+  });
+  const data = await res.json();
+  sessionId = data.id;
+  affinityToken = data.affinityToken;
+  sessionKey = data.key;
+
+  log('セッション開始');
+  await initChasitor();
+  listenMessages();
+}
+
+// 初期化
+async function initChasitor() {
+  await fetch(`${LIVE_AGENT_BASE}/chat/rest/Chasitor/ChasitorInit`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-LIVEAGENT-API-VERSION': '50',
+      'X-LIVEAGENT-SESSION-KEY': sessionKey,
+      'X-LIVEAGENT-AFFINITY': affinityToken,
+      'X-LIVEAGENT-SEQUENCE': '1'
+    },
+    body: JSON.stringify({
+      organizationId: ORGANIZATION_ID,
+      deploymentId: DEPLOYMENT_ID,
+      buttonId: BUTTON_ID,
+      sessionId: sessionId,
+      userAgent: navigator.userAgent,
+      language: 'ja',
+      screenResolution: '1920x1080',
+      visitorName: 'ゲストユーザー',
+      prechatDetails: [],
+      prechatEntities: [],
+      receiveQueueUpdates: true,
+      isPost: true
+    })
+  });
+
+  log('チャット初期化完了');
+}
+
+// メッセージ監視
+async function listenMessages() {
+  while (true) {
+    const res = await fetch(`${LIVE_AGENT_BASE}/chat/rest/System/Messages`, {
+      method: 'GET',
+      headers: {
+        'X-LIVEAGENT-API-VERSION': '50',
+        'X-LIVEAGENT-AFFINITY': affinityToken,
+        'X-LIVEAGENT-SESSION-KEY': sessionKey
+      }
+    });
+
+    const data = await res.json();
+    data.messages.forEach(m => {
+      if (m.type === 'ChatMessage') {
+        log(`エージェント: ${m.message.text}`);
+      }
+    });
+
+    await new Promise(resolve => setTimeout(resolve, 1000)); // ポーリング間隔
+  }
+}
+
+// メッセージ送信
+async function sendMessage() {
+  const msg = document.getElementById('messageInput').value;
+  if (!msg) return;
+
+  await fetch(`${LIVE_AGENT_BASE}/chat/rest/Chasitor/ChatMessage`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-LIVEAGENT-API-VERSION': '50',
+      'X-LIVEAGENT-AFFINITY': affinityToken,
+      'X-LIVEAGENT-SESSION-KEY': sessionKey,
+      'X-LIVEAGENT-SEQUENCE': '2'
+    },
+    body: JSON.stringify({ text: msg })
+  });
+
+  log(`あなた: ${msg}`);
+  document.getElementById('messageInput').value = '';
+}
+
+// チャット終了
+async function endChat() {
+  await fetch(`${LIVE_AGENT_BASE}/chat/rest/Chasitor/ChatEnd`, {
+    method: 'POST',
+    headers: {
+      'X-LIVEAGENT-API-VERSION': '50',
+      'X-LIVEAGENT-AFFINITY': affinityToken,
+      'X-LIVEAGENT-SESSION-KEY': sessionKey,
+      'X-LIVEAGENT-SEQUENCE': '3'
+    }
+  });
+
+  log('チャットを終了しました。');
+}
+
+// 表示用ログ
+function log(message) {
+  chatBox.innerHTML += `<div>${message}</div>`;
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// 自動起動
+startSession();
+</script>
+
+</body>
+</html>
