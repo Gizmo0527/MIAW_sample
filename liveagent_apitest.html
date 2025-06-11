@@ -94,8 +94,8 @@ async function listenMessages() {
     const data = await res.json();
 
     // 最新の sequence を更新
-    if (data.sequence !== undefined) {
-      currentSequence = data.sequence;
+    if (data.sequence) {
+      currentSequence = data.sequence + 2;
     }
 
     data.messages.forEach(m => {
