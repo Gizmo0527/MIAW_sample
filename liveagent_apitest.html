@@ -33,7 +33,7 @@ async function startSession() {
   const res = await fetch(`${LIVE_AGENT_BASE}/chat/rest/System/SessionId`, {
     method: 'GET',
     headers: {
-      'X-LIVEAGENT-API-VERSION': '50',
+      'X-LIVEAGENT-API-VERSION': '63',
       'X-LIVEAGENT-AFFINITY': 'null'
     }
   });
@@ -53,7 +53,7 @@ async function initChasitor() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-LIVEAGENT-API-VERSION': '50',
+      'X-LIVEAGENT-API-VERSION': '63',
       'X-LIVEAGENT-SESSION-KEY': sessionKey,
       'X-LIVEAGENT-AFFINITY': affinityToken,
       'X-LIVEAGENT-SEQUENCE': '1'
@@ -83,7 +83,7 @@ async function listenMessages() {
     const res = await fetch(`${LIVE_AGENT_BASE}/chat/rest/System/Messages`, {
       method: 'GET',
       headers: {
-        'X-LIVEAGENT-API-VERSION': '50',
+        'X-LIVEAGENT-API-VERSION': '63',
         'X-LIVEAGENT-AFFINITY': affinityToken,
         'X-LIVEAGENT-SESSION-KEY': sessionKey
       }
@@ -109,7 +109,7 @@ async function sendMessage() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-LIVEAGENT-API-VERSION': '50',
+      'X-LIVEAGENT-API-VERSION': '63',
       'X-LIVEAGENT-AFFINITY': affinityToken,
       'X-LIVEAGENT-SESSION-KEY': sessionKey,
       'X-LIVEAGENT-SEQUENCE': '2'
@@ -126,7 +126,7 @@ async function endChat() {
   await fetch(`${LIVE_AGENT_BASE}/chat/rest/Chasitor/ChatEnd`, {
     method: 'POST',
     headers: {
-      'X-LIVEAGENT-API-VERSION': '50',
+      'X-LIVEAGENT-API-VERSION': '63',
       'X-LIVEAGENT-AFFINITY': affinityToken,
       'X-LIVEAGENT-SESSION-KEY': sessionKey,
       'X-LIVEAGENT-SEQUENCE': '3'
