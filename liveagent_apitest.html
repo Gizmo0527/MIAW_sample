@@ -17,7 +17,7 @@
 <button onclick="endChat()">チャット終了</button>
 
 <script>
-const LIVE_AGENT_BASE = 'https://sf-proxy.toshirock0708.workers.dev'; // 環境に合わせて変更
+const LIVE_AGENT_BASE = 'https://sf-proxy.toshirock0708.workers.dev'; // ご自身の環境に合わせて変更
 const DEPLOYMENT_ID = '572GB000000HT0U';
 const BUTTON_ID = '573GB000000HU5l';
 const ORGANIZATION_ID = '00DGB000003WnP8';
@@ -25,7 +25,7 @@ const ORGANIZATION_ID = '00DGB000003WnP8';
 let affinityToken = '';
 let sessionKey = '';
 let sessionId = '';
-let sequenceNumber = 1;
+let currentSequence = 1;
 
 const chatBox = document.getElementById('chatBox');
 
@@ -48,7 +48,7 @@ async function startSession() {
   listenMessages();
 }
 
-// 初期化
+// チャット初期化
 async function initChasitor() {
   await fetch(`${LIVE_AGENT_BASE}/chat/rest/Chasitor/ChasitorInit`, {
     method: 'POST',
@@ -57,7 +57,7 @@ async function initChasitor() {
       'X-LIVEAGENT-API-VERSION': '63',
       'X-LIVEAGENT-SESSION-KEY': sessionKey,
       'X-LIVEAGENT-AFFINITY': affinityToken,
-      'X-LIVEAGENT-SEQUENCE': sequenceNumber.toString()
+      'X-LIVEAGENT-SEQUENCE': currentSequence.toString()
     },
     body: JSON.stringify({
       organizationId: ORGANIZATION_ID,
@@ -76,9 +76,10 @@ async function initChasitor() {
   });
 
   log('チャット初期化完了');
+  currentSequence++; // init 分の sequence を加算
 }
 
-// メッセージ監視
+// メッセージ監視（ポーリング）
 async function listenMessages() {
   while (true) {
     const res = await fetch(`${LIVE_AGENT_BASE}/chat/rest/System/Messages`, {
@@ -92,8 +93,9 @@ async function listenMessages() {
 
     const data = await res.json();
 
-    if (typeof data.sequence !== 'undefined') {
-      sequenceNumber = data.sequence;
+    // 最新の sequence を更新
+    if (data.sequence !== undefined) {
+      currentSequence = data.sequence;
     }
 
     data.messages.forEach(m => {
@@ -102,7 +104,7 @@ async function listenMessages() {
       }
     });
 
-    await new Promise(resolve => setTimeout(resolve, 1000)); // ポーリング間隔
+    await new Promise(resolve => setTimeout(resolve, 1000));
   }
 }
 
@@ -110,7 +112,6 @@ async function listenMessages() {
 async function sendMessage() {
   const msg = document.getElementById('messageInput').value;
   if (!msg) return;
-  sequenceNumber++;
 
   await fetch(`${LIVE_AGENT_BASE}/chat/rest/Chasitor/ChatMessage`, {
     method: 'POST',
@@ -119,12 +120,13 @@ async function sendMessage() {
       'X-LIVEAGENT-API-VERSION': '63',
       'X-LIVEAGENT-AFFINITY': affinityToken,
       'X-LIVEAGENT-SESSION-KEY': sessionKey,
-      'X-LIVEAGENT-SEQUENCE': sequenceNumber.toString()
+      'X-LIVEAGENT-SEQUENCE': currentSequence.toString()
     },
     body: JSON.stringify({ text: msg })
   });
 
   log(`あなた: ${msg}`);
+  currentSequence++; // 送信後インクリメント
   document.getElementById('messageInput').value = '';
 }
 
@@ -136,11 +138,12 @@ async function endChat() {
       'X-LIVEAGENT-API-VERSION': '63',
       'X-LIVEAGENT-AFFINITY': affinityToken,
       'X-LIVEAGENT-SESSION-KEY': sessionKey,
-      'X-LIVEAGENT-SEQUENCE': sequenceNumber.toString()
+      'X-LIVEAGENT-SEQUENCE': currentSequence.toString()
     }
   });
 
   log('チャットを終了しました。');
+  currentSequence++; // 終了後インクリメント
 }
 
 // 表示用ログ
