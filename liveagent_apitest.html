@@ -110,6 +110,7 @@ async function listenMessages() {
 async function sendMessage() {
   const msg = document.getElementById('messageInput').value;
   if (!msg) return;
+  sequenceNumber++;
 
   await fetch(`${LIVE_AGENT_BASE}/chat/rest/Chasitor/ChatMessage`, {
     method: 'POST',
