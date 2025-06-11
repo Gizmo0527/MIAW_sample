@@ -97,7 +97,7 @@ async function listenMessages() {
 
     // 最新の sequence を更新
     if (data.sequence) {
-      currentSequence = data.sequence + +1;
+      currentSequence = data.sequence + 1;
     }
 
     data.messages.forEach(m => {
