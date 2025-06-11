@@ -123,7 +123,7 @@ async function sendMessage() {
       'X-LIVEAGENT-API-VERSION': API_VERSION,
       'X-LIVEAGENT-AFFINITY': affinityToken,
       'X-LIVEAGENT-SESSION-KEY': sessionKey,
-      'X-LIVEAGENT-SEQUENCE': 3
+      'X-LIVEAGENT-SEQUENCE': currentSequence.toString()
     },
     body: JSON.stringify({ text: msg })
   });
